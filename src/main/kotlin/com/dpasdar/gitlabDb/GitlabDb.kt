@@ -1,4 +1,4 @@
-@file:JvmName("GitLabDb")
+@file:JvmName("GitlabDb")
 package com.dpasdar.gitlabDb
 
 import org.gitlab4j.api.GitLabApi
@@ -19,15 +19,67 @@ val mainModule = module {
     }
 }
 
+/**
+ * Main library class, providing a wrapper for all provided API
+ * Example usage:
+ *
+ * ```
+ * getInstance().getResource("testFile")
+ * ```
+ * @param gitlabApiWrapper provided automatically by the DIC
+ */
 class GitlabDbInstance : KoinComponent {
-    val gitlabApiWrapper by inject<GitlabApiWrapper>()
+    private val gitlabApiWrapper by inject<GitlabApiWrapper>()
 
+    /**
+     * Getting resource from the underlying gitlab repo by name
+     * Example usage:
+     *
+     * ```
+     * getInstance().getResource("testFile")
+     * ```
+     *
+     * @param resourceName
+     */
     fun getResource(resourceName: String): GitlabResource? = GitlabResource.from(gitlabApiWrapper.getFile(resourceName))
 
+    /**
+     * Saving a resource in gitlab repo, if the resource exists,
+     * it will be committed with an update message, otherwise it
+     * will be created with creation commit message
+     * Example usage:
+     *
+     * ```
+     * getInstance().putResource("test data".byteInputStream(), "hello.txt")
+     * ```
+     *
+     * @param resource input stream containing the textual resource
+     * @param resourceName the unique name of the resource
+     */
     fun putResource(resource : InputStream, resourceName: String) : GitlabResource? =
             GitlabResource.from(gitlabApiWrapper.createOrUpdateFile(resource, resourceName))
 
+    /**
+     * If the resource exists, a remove operation will be committed
+     * @param resourceName the unique name of the resource
+     */
     fun removeResource(resourceName: String) = gitlabApiWrapper.deleteFile(resourceName)
+
+    /**
+     * Get a previous version of the file without reverting. If no previous verion, if will return null
+     * Example usage:
+     *
+     * ```
+     * //if [latestCommit, Commit1, Commit2]
+     * getResourcePreviousVersion("testFile", 2) // ---> will return Commit2
+     * ```
+     *
+     * @param resourceName the unique name of the resource
+     * @param numberOfVersionsToSkip how many versions to go back
+     */
+    @JvmOverloads
+    fun getResourcePreviousVersion(resourceName: String, numberOfVersionsToSkip: Long = 1) : GitlabResource? =
+        GitlabResource.from(gitlabApiWrapper.getPreviousFileVersion(resourceName, numberOfVersionsToSkip))
 }
 
 fun getInstance(): GitlabDbInstance {
@@ -39,10 +91,4 @@ fun getInstance(): GitlabDbInstance {
         }
     }
     return GitlabDbInstance()
-}
-
-fun main() {
-    getInstance().gitlabApiWrapper.createOrUpdateFile(
-        GitlabDbInstance::class.java.classLoader
-            .getResourceAsStream("test.txt"),"test2.txt")
 }

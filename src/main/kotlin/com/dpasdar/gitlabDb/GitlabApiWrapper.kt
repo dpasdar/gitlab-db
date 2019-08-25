@@ -58,15 +58,27 @@ class GitlabApiWrapper(val api: GitLabApi, val projectName: String, val branchNa
         }
     }
 
-    fun getFile(fileName: String)
+    fun getFile(fileName: String, ref: String = branchName)
             : RepositoryFile? {
+
         return api.repositoryFileApi
-                .getOptionalFile(projectName, fileName, branchName)
+                .getOptionalFile(projectName, fileName, ref)
                 .toNullable()
     }
 
     fun deleteFile(fileName: String) {
         api.repositoryFileApi.deleteFile(projectName, fileName, branchName, "file deleted")
+    }
+
+    fun getPreviousFileVersion(fileName: String, numberOfVersionsToSkip : Long = 1): RepositoryFile? {
+        val lastCommit = api.commitsApi.getCommits(projectName, branchName, fileName)
+            .stream()
+            .skip(numberOfVersionsToSkip)
+            .findFirst()
+        if(lastCommit.isPresent) {
+            return getFile(fileName, lastCommit.get().id)
+        }
+        return null
     }
 
     fun String.md5(): String {

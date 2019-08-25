@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     `maven-publish`
     kotlin("jvm") version "1.3.41"
+    id("org.jetbrains.dokka") version "0.9.18"
 }
 
 group = "com.dpasdar"
@@ -19,6 +20,11 @@ tasks {
     }
     "test"(Test::class) {
         useJUnitPlatform()
+    }
+    dokka {
+        moduleName = ""
+        outputFormat = "gfm"
+        outputDirectory = "$rootDir/docs"
     }
 }
 

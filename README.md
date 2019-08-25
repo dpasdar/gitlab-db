@@ -20,3 +20,6 @@ Afterwards, you can get an instance of the API using
 ```
 GitlabDb.getInstance().*
 ```
+
+## Documentation
+[Auto generated Dokka documentation](https://dpasdar.github.io/gitlab-db/com.dpasdar.gitlab-db/-gitlab-db-instance/)
