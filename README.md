@@ -1,4 +1,4 @@
-# gitlab-db
+# gitlab-db [![Build Status](https://dev.azure.com/dpasdar/dpasdar/_apis/build/status/dpasdar.gitlab-db?branchName=master)](https://dev.azure.com/dpasdar/dpasdar/_build/latest?definitionId=1&branchName=master)
 A simple library written in Kotlin to store and retrieve text files from GitLab using the GitLab API, effectively using it as some sort of database or content repository.
 
 ## Local Build
