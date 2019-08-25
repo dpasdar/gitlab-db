@@ -1,13 +1,13 @@
 # gitlab-db
 A simple library written in Kotlin to store and retrieve text files from GitLab using the GitLab API, effectively using it as some sort of database or content repository.
 
-# Local Build
+## Local Build
 Using gradle, issue the following command to build a pom
 ```
 gradle clean publish
 ```
 
-# Using in Java
+## Using in Java
 After including the generated maven artifact, make sure the following parameters are provided (either in application.properties or as ENV variables):
 ```
 gitlab-db.gitlab_url="https://gitlab.com"
@@ -18,5 +18,5 @@ gitlab-db.branch="master"
 
 Afterwards, you can get an instance of the API using 
 ```
-GitLabDb.getInstance().getGitlabApiWrapper()...
+GitlabDb.getInstance().*
 ```

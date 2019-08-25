@@ -17,6 +17,9 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
     }
+    "test"(Test::class) {
+        useJUnitPlatform()
+    }
 }
 
 tasks.register<Jar>("uberJar") {
@@ -31,7 +34,11 @@ dependencies {
     implementation(kotlin("stdlib"))
     compile("org.gitlab4j:gitlab4j-api:4.12.1")
     compile("org.koin:koin-core:2.0.1")
-    testImplementation("junit:junit:4.12")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    testRuntime("org.junit.platform:junit-platform-console:1.2.0")
+
 }
 
 publishing {
